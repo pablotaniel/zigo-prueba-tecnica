@@ -2,10 +2,15 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface Props {
-    onSuppliers: () => void;
+  onSuppliers: () => void;
+  onProducts: () => void;
+  onCustomers: () => void;
+  onOrders: () => void;
+    onOrdersList: () => void;
+
 }
 
-const Home: React.FC<Props> = ({ onSuppliers }) => {
+const Home: React.FC<Props> = ({ onSuppliers, onProducts, onCustomers, onOrders, onOrdersList }) => {
   return (
     <div className="container-fluid bg-light min-vh-100">
 
@@ -30,48 +35,60 @@ const Home: React.FC<Props> = ({ onSuppliers }) => {
 
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h3>📦</h3>
+              <div className="card-body text-center">
+
+                <i className="fas fa-file-circle-plus fa-3x text-primary mb-3"></i>
+
                 <h5>Nueva Orden</h5>
+
                 <p className="text-muted">
                   Crear una nueva orden de compra.
                 </p>
 
-                <button className="btn btn-primary w-100">
+                <button className="btn btn-primary w-100" onClick={onOrders}>
                   Nueva Orden
                 </button>
+
               </div>
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h3>📋</h3>
+              <div className="card-body text-center">
+
+                <i className="fas fa-clipboard-list fa-3x text-success mb-3"></i>
+
                 <h5>Órdenes</h5>
+
                 <p className="text-muted">
                   Consultar órdenes existentes.
                 </p>
 
-                <button className="btn btn-success w-100">
+                <button className="btn btn-success w-100" onClick={onOrdersList}>
                   Ver Órdenes
                 </button>
+
               </div>
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h3>👥</h3>
+              <div className="card-body text-center">
+
+                <i className="fas fa-users fa-3x text-secondary mb-3"></i>
+
                 <h5>Clientes</h5>
+
                 <p className="text-muted">
                   Administración de clientes.
                 </p>
 
-                <button className="btn btn-secondary w-100">
+                <button className="btn btn-secondary w-100" onClick={onCustomers}>
                   Clientes
                 </button>
+
               </div>
             </div>
           </div>
@@ -82,86 +99,53 @@ const Home: React.FC<Props> = ({ onSuppliers }) => {
 
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h3>🚚</h3>
+              <div className="card-body text-center">
+
+                <i className="fas fa-truck fa-3x text-warning mb-3"></i>
+
                 <h5>Proveedores</h5>
+
                 <p className="text-muted">
                   Administración de proveedores.
                 </p>
 
-                <button className="btn btn-warning w-100" onClick={onSuppliers}>
+                <button
+                  className="btn btn-warning w-100"
+                  onClick={onSuppliers}
+                >
                   Proveedores
                 </button>
+
               </div>
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h3>🛒</h3>
+              <div className="card-body text-center">
+
+                <i className="fas fa-box-open fa-3x text-info mb-3"></i>
+
                 <h5>Productos</h5>
+
                 <p className="text-muted">
                   Catálogo de productos.
                 </p>
 
-                <button className="btn btn-info w-100">
+                <button
+                  className="btn btn-info w-100"
+                  onClick={onProducts}
+                >
                   Productos
                 </button>
+
               </div>
             </div>
           </div>
 
         </div>
 
-        <div className="card shadow-sm mt-5">
-          <div className="card-header fw-bold">
-            Últimas órdenes
-          </div>
-
-          <div className="card-body">
-
-            <table className="table table-hover align-middle">
-
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Cliente</th>
-                  <th>Total</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>#1001</td>
-                  <td>ACME S.A.</td>
-                  <td>Q 1,250.00</td>
-                  <td>
-                    <span className="badge bg-success">
-                      Abierta
-                    </span>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>#1002</td>
-                  <td>Demo Corp.</td>
-                  <td>Q 850.00</td>
-                  <td>
-                    <span className="badge bg-secondary">
-                      Cerrada
-                    </span>
-                  </td>
-                </tr>
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
+       
 
       </div>
 

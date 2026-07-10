@@ -1,12 +1,7 @@
+import { ProductInput } from '../../models/product';
 import { query } from '../../shared/db';
 
-export interface ProductInput {
-  sku: string;
-  name: string;
-  supplier_id: string;
-  unit_price: number;
-  stock: number;
-}
+
 
 export async function handleGetProducts() {
   const result = await query(

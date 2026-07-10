@@ -1,21 +1,75 @@
 import React, { useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 
-import Home from './components/Home';
+import Home from './components/OrderEntryScreen';
 import SuppliersScreen from './components/SuppliersScreen';
+import ProductsScreen from './components/ProductsScreen';
+import CustomersScreen from './components/CustomersScreen';
+import OrderLineForm from './components/OrderForm';
+import OrdersList from './components/OrderList';
+
+import { createOrder } from './api/orders';
+import { CreateOrderPayload } from './types/order';
 
 const queryClient = new QueryClient();
 
-const App: React.FC = () => {
+type Screen =
+  | 'home'
+  | 'suppliers'
+  | 'products'
+  | 'customers'
+  | 'orders'
+  | 'orders-list';
 
-  const [screen, setScreen] = useState<'home' | 'suppliers'>('home');
+const App: React.FC = () => {
+  const [screen, setScreen] = useState<Screen>('home');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCreateOrder = async (
+    values: CreateOrderPayload
+  ) => {
+    try {
+      setIsSubmitting(true);
+
+      const order = await createOrder(values);
+
+      console.log('Orden creada:', order);
+      alert('Orden creada correctamente');
+
+      await queryClient.invalidateQueries({
+        queryKey: ['orders'],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['products'],
+      });
+
+      setScreen('orders-list');
+    } catch (error: any) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.error ||
+          error.message ||
+          'Error al crear la orden'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
-
       {screen === 'home' && (
         <Home
           onSuppliers={() => setScreen('suppliers')}
+          onProducts={() => setScreen('products')}
+          onCustomers={() => setScreen('customers')}
+          onOrders={() => setScreen('orders')}
+          onOrdersList={() => setScreen('orders-list')}
         />
       )}
 
@@ -25,6 +79,31 @@ const App: React.FC = () => {
         />
       )}
 
+      {screen === 'products' && (
+        <ProductsScreen
+          onBack={() => setScreen('home')}
+        />
+      )}
+
+      {screen === 'customers' && (
+        <CustomersScreen
+          onBack={() => setScreen('home')}
+        />
+      )}
+
+      {screen === 'orders' && (
+        <OrderLineForm
+          onSubmit={handleCreateOrder}
+          isSubmitting={isSubmitting}
+          onBack={() => setScreen('home')}
+        />
+      )}
+
+      {screen === 'orders-list' && (
+        <OrdersList
+          onBack={() => setScreen('home')}
+        />
+      )}
     </QueryClientProvider>
   );
 };

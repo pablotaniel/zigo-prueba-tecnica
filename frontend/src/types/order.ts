@@ -1,29 +1,56 @@
+
+export type OrderStatus = 'DRAFT' | 'CONFIRMED' | 'CANCELLED';
+
 export interface Order {
   id: string;
-  customerId: string;
+  customer_id: string;
+  customer_name?: string;
   items: OrderItem[];
   total: number;
-  status: 'DRAFT' | 'CONFIRMED' | 'CANCELLED';
-  notes?: string;
+  status: OrderStatus;
+  notes?: string | null;
+  created_at?: string;
 }
 
 export interface OrderItem {
-  productId: string;
-  productName?: string;
+  id?: string;
+  order_id?: string;
+  product_id: string;
+  sku?: string;
+  product_name?: string;
   quantity: number;
-  unitPrice: number;
+  unit_price: number;
+  subtotal?: number;
 }
 
 export interface Product {
   id: string;
   sku: string;
   name: string;
-  unitPrice: number;
+  supplier_id?: string;
+  supplier_name?: string;
+  unit_price: number;
   stock: number;
 }
 
 export interface CreateOrderPayload {
-  customerId: string;
-  items: { productId: string; quantity: number }[];
+  customer_id: string;
+  status?: OrderStatus;
   notes?: string;
+  items: OrderItemPayload[];
 }
+
+export interface UpdateOrderPayload {
+  customer_id: string;
+  status: OrderStatus;
+  notes?: string;
+  items: OrderItemPayload[];
+}
+
+export interface OrderItemPayload {
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+}
+
+

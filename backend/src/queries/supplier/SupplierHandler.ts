@@ -1,10 +1,7 @@
+import { SupplierInput } from '../../models/supplier';
 import { query } from '../../shared/db';
 
-export interface SupplierInput {
-  name: string;
-  email?: string;
-  phone?: string;
-}
+
 
 export async function handleGetSuppliers() {
   const result = await query(`
