@@ -7,7 +7,7 @@
 - React
 - TypeScript
 - TanStack Query
-- Bootstrap 5
+- Bootstrap 
 - Font Awesome
 - Docker Compose
 
@@ -140,6 +140,26 @@ PUT    /products/:id
 DELETE /products/:id
 ```
 
+
+## Customers
+
+```
+GET    /customers
+GET    /customers/:id
+POST   /customers
+PUT    /customers/:id
+DELETE /customers/:id
+
+
+## orders
+
+```
+GET    /orders
+GET    /orders/:id
+POST   /orders
+PUT    /orders/:id
+DELETE /orders/:id
+
 ---
 
 # Estado del proyecto
@@ -210,10 +230,5 @@ frontend
 │
 └── App.tsx
 
-
-
-# ejecutar servicio produccion
-
-docker compose up -d 
 
 
