@@ -49,3 +49,7 @@ docker compose up -d
 
 
 Backend: puerto 4000. Frontend: puerto 3000.
+
+
+Para cambiar ruta remota 
+VITE_API_URL
