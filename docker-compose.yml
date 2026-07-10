@@ -1,25 +1,94 @@
 services:
   postgres:
-    image: postgres:14
-    container_name: postgres14
+    image: postgres:14-alpine
+    container_name: sales_postgres
     restart: unless-stopped
 
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: orders
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+      - ./database/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d orders"]
-      interval: 10s
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 15
+      start_period: 10s
+
+    networks:
+      - sales_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    container_name: sales_backend
+    restart: unless-stopped
+
+    command: sh -c "npm start"
+
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      
+
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - sales_network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+
+    container_name: sales_frontend
+    restart: unless-stopped
+
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+
+    depends_on:
+      backend:
+        condition: service_started
+
+    networks:
+      - sales_network
 
 volumes:
   postgres_data:
+
+networks:
+  sales_network:
+    driver: bridge

@@ -1,12 +1,9 @@
 import { Router, Request, Response } from 'express';
-
-import {
-  handleCreateOrder,
-  handleDeleteOrder,
-  handleGetOrder,
-  handleGetOrders,
-  handleUpdateOrder,
-} from '../queries/order/OrderHandler';
+import { handleGetOrders } from '../queries/order/listOrders';
+import { handleGetOrder } from '../queries/order/getOrder';
+import { handleCreateOrder } from '../commands/order/CreateOrderHandler';
+import { handleUpdateOrder } from '../commands/order/UpdateOrderHandler';
+import { handleDeleteOrder } from '../commands/order/DeleteOrderHandler';
 
 const router = Router();
 

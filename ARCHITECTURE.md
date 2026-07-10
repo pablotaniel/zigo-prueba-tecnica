@@ -2,44 +2,218 @@
 
 ## Stack
 
-- Frontend: React, TanStack Query
-- Backend: Node.js, Express
-- DB: PostgreSQL
+### Frontend
 
-## Patrones
+- React
+- TypeScript
+- TanStack Query
+- Bootstrap 5
+- Font Awesome
+- Docker Compose
 
-- CQRS: commands (escritura) y queries (lectura) separados
-- Feature-based en frontend: `features/orders/`
+### Backend
 
-## Microservicios
+- Node.js
+- Express
+- TypeScript
 
-- `orders-service`: este repo, puerto 4000
-- `inventory-service`: stock, puerto 3000 (no incluido en el zip)
-- `payment-service`: pagos, puerto 5000 (no incluido)
+### Base de datos
 
-## Flujo objetivo — ingreso de órdenes
+- PostgreSQL
 
-1. Consultar órdenes existentes o iniciar una nueva
-2. Seleccionar el cliente
-3. Agregar productos al detalle (producto, cantidad, subtotal/total)
-4. Guardar: cabecera + ítems
-5. Revisar el detalle guardado
+---
 
-## Implementación actual
+## Backend
 
-| Paso | Estado |
-|------|--------|
-| Listar / crear órdenes | No implementado en UI |
-| Seleccionar cliente | Hardcodeado en `App.tsx` |
-| Agregar productos al detalle | Formulario básico; pide ID de producto a mano |
-| Guardar orden + ítems | `POST /orders` iniciado; incompleto |
-| Ver detalle con ítems | `GET /orders/:id` no arma el detalle para el frontend |
-| Catálogo en UI | No hay selector; existe `GET /orders/products` |
+- CQRS (Commands y Queries separados)
+- Handlers por operación
+- API REST
 
-## Endpoints
+## Frontend
 
-- `GET /orders/products` — catálogo
-- `GET /orders/:id` — cabecera de orden
-- `POST /orders` — crear orden
+- Componentes reutilizables
+- Pantallas independientes
+- Consumo de API mediante TanStack Query
 
-Pendiente: idempotencia al guardar, integración con inventory-service, validaciones de negocio.
+---
+
+# Microservicios
+
+| Servicio | Puerto | Estado |
+|----------|-------:|--------|
+| orders-service | 4000 | Implementado |
+| inventory-service | 3000 | Externo |
+
+---
+
+# Modelo
+
+```text
+                    +----------------+
+                    |   Customers    |
+                    +----------------+
+                            |
+                            |
+                            ▼
+                    +----------------+
+                    |     Orders     |
+                    +----------------+
+                            |
+                            |
+                            ▼
+                    +----------------+
+                    |  Order Items   |
+                    +----------------+
+                            ▲
+                            |
+                            |
+                    +----------------+
+                    |    Products    |
+                    +----------------+
+                            ▲
+                            |
+                            |
+                    +----------------+
+                    |   Suppliers    |
+                    +----------------+
+```
+
+---
+
+# Flujo de ingreso de órdenes
+
+1. Consultar órdenes existentes.
+2. Crear una nueva orden.
+3. Seleccionar un cliente.
+4. Agregar productos al detalle.
+5. Visualizar el proveedor del producto.
+6. Calcular totales.
+7. Guardar cabecera y detalle.
+8. Consultar nuevamente la orden.
+9. Creacion de proveedores
+
+
+---
+
+# Frontend
+
+Actualmente existen las siguientes pantallas:
+
+- Home
+- Proveedores (CRUD)
+- Productos (CRUD)
+- Clientes (CRUD)
+- Pedidos (Creacion)
+- Lista de Pedidos
+
+
+
+---ejemplos
+
+# Backend
+
+## Orders
+
+```
+GET    /orders
+GET    /orders/:id
+POST   /orders
+```
+
+## Suppliers
+
+```
+GET    /suppliers
+GET    /suppliers/:id
+POST   /suppliers
+PUT    /suppliers/:id
+DELETE /suppliers/:id
+```
+
+## Products
+
+```
+GET    /products
+GET    /products/:id
+POST   /products
+PUT    /products/:id
+DELETE /products/:id
+```
+
+---
+
+# Estado del proyecto
+
+| Funcionalidad | Estado |
+|---------------|:------:|
+| CRUD Proveedores | ✅ |
+| CRUD Productos | ✅ |
+| CRUD Clientes | ✅ |
+| Listado de Órdenes | ✅ |
+| Crear Orden | ✅ |
+| Detalle de Orden | ✅ |
+| Mostrar proveedor del producto | ✅ |
+| Persistencia cabecera + detalle | ✅ |
+| Cálculo de totales | ✅ |
+
+---
+
+# Estructura
+
+```text
+backend
+│
+├── commands
+│   ├── create-order
+│   ├── create-product
+│   ├── create-supplier
+│   └── ...
+│
+├── queries
+│   ├── order
+│   ├── product
+│   ├── supplier
+│   └── ...
+│
+├── routes
+│   ├── orders.ts
+│   ├── products.ts
+│   ├── suppliers.ts
+│   └── customers.ts
+│
+├── shared
+│   └── db.ts
+│
+├── server.ts
+└── migrate.ts
+```
+
+```text
+frontend
+│
+├── api
+│   ├── orders.ts
+│   ├── products.ts
+│   ├── suppliers.ts
+│   └── customers.ts
+│
+├── pages
+│   ├── Home.tsx
+│   ├── ProductsScreen.tsx
+│   ├── SuppliersScreen.tsx
+│   ├── CustomersScreen.tsx
+│   └── OrderEntryScreen.tsx
+│
+├── components
+│
+├── types
+│
+└── App.tsx
+
+
+
+# ejecutar servicio produccion
+
+docker compose up -d 
+
+

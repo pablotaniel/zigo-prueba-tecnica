@@ -1,11 +1,9 @@
 import { Router, Request, Response } from 'express';
-import {
-  handleGetSuppliers,
-  handleGetSupplier,
-  handleCreateSupplier,
-  handleUpdateSupplier,
-  handleDeleteSupplier,
-} from '../queries/supplier/SupplierHandler';
+import { handleGetSuppliers } from '../queries/supplier/listSupplier';
+import { handleGetSupplier } from '../queries/supplier/getSupplier';
+import { handleCreateSupplier } from '../commands/supplier/CreateSupplierHandler';
+import { handleUpdateSupplier } from '../commands/supplier/UpdateSupplierHandler';
+import { handleDeleteSupplier } from '../commands/supplier/DeleteSupplierHandler';
 
 const router = Router();
 

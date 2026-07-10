@@ -1,12 +1,10 @@
 import { Router, Request, Response } from 'express';
+import { handleGetCustomers } from '../queries/customer/listCustomer';
+import { handleGetCustomer } from '../queries/customer/getCustomer';
+import { handleCreateCustomer } from '../commands/customer/CreateCustomerHandler';
+import { handleUpdateCustomer } from '../commands/customer/UpdateCustomerHandler';
+import { handleDeleteCustomer } from '../commands/customer/DeleteCustomerHandler';
 
-import {
-  handleCreateCustomer,
-  handleDeleteCustomer,
-  handleGetCustomer,
-  handleGetCustomers,
-  handleUpdateCustomer,
-} from '../queries/customer/CustomerHandler';
 
 const router = Router();
 
