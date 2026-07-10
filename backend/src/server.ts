@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import ordersRouter from './routes/orders';
 import suppliersRouter from './routes/suppliers';
+import productsRouter from './routes/products';
 
 
 
@@ -10,9 +11,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/suppliers', suppliersRouter);
+app.use('/products', productsRouter);
 
 
-app.use('/orders', ordersRouter);
+//app.use('/orders', ordersRouter);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 

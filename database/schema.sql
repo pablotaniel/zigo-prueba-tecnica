@@ -8,12 +8,22 @@ CREATE TABLE IF NOT EXISTS customers (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS suppliers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    phone VARCHAR(30),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     sku VARCHAR(50) NOT NULL,
     name VARCHAR(100) NOT NULL,
     unit_price DECIMAL(10,2) NOT NULL CHECK (unit_price >= 0),
-    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0)
+    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    supplier_id UUID NOT NULL
+    REFERENCES suppliers(id)
 );
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -40,13 +50,7 @@ CREATE TABLE IF NOT EXISTS processed_commands (
     processed_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS suppliers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100),
-    phone VARCHAR(30),
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
+
 
 CREATE INDEX IF NOT EXISTS idx_orders_customer
 ON orders(customer_id);
@@ -62,3 +66,6 @@ ON products(sku);
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_customers_email
 ON customers(email);
+
+CREATE INDEX IF NOT EXISTS idx_products_supplier
+ON products(supplier_id);

@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Home from './home';
+import Home from './components/Home';
+import SuppliersScreen from './components/SuppliersScreen';
 
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
+
+  const [screen, setScreen] = useState<'home' | 'suppliers'>('home');
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Home />
+
+      {screen === 'home' && (
+        <Home
+          onSuppliers={() => setScreen('suppliers')}
+        />
+      )}
+
+      {screen === 'suppliers' && (
+        <SuppliersScreen
+          onBack={() => setScreen('home')}
+        />
+      )}
+
     </QueryClientProvider>
   );
 };
